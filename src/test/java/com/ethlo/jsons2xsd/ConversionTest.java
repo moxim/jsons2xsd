@@ -256,6 +256,19 @@ public class ConversionTest {
         }
     }
 
+    @Test
+    public void testIdHasNoType() throws IOException {
+        try (final Reader r = reader("/schema/missing_type.json")) {
+            final Config cfg = new Config.Builder()
+                    .targetNamespace("http://ethlo.com/schema/missing_type.xsd")
+                    .name("missing_type")
+                    .unwrapArrays(true)
+                    .build();
+        } catch (IllegalArgumentException e) {
+            assertThat(e.getMessage()).isEqualTo("type must be specified on node '$id': {\"default\":\"I have not type!\"}");
+        }
+    }
+
     private Reader reader(String path) {
         return new InputStreamReader(getClass().getResourceAsStream(path));
     }
